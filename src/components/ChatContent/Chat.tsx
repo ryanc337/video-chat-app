@@ -8,10 +8,11 @@ const Container = styled.div`
 `;
 
 type ChatProps = {
-  setView: any
+  setView: any,
+  setParticipants: any
 };
 
-const Chat = ({setView} : ChatProps) => {
+const Chat = ({setView, setParticipants} : ChatProps) => {
   const frameRef = useRef(null);
 
   useEffect(() => {
@@ -24,7 +25,14 @@ const Chat = ({setView} : ChatProps) => {
         }
       });
       callFrame.join({ url: process.env.DAILY_URL });
-  }, [frameRef]);
+      callFrame.on('joined-meeting', () => {
+        setParticipants(callFrame.participants());
+      })
+      callFrame.on('left-meeting', () => {
+        callFrame.destroy();
+        setView('SUMMARY');
+      })
+  }, [setView, setParticipants]);
 
   return (
     <Container ref={frameRef}>
