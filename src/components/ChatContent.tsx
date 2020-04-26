@@ -1,16 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-import DailyIframe from '@daily-co/daily-js';
+import Chat from './Chat';
 
 type ChatContentProps = {
   setView: any
-}
+};
 
-const ChatContent = (props: ChatContentProps) => {
+const ChatContent = ({ setView }: ChatContentProps) => {
 
   return(
-    <div>Chat</div>
-  )
+    <div>
+      <Chat setView={setView} />
+    </div>
+  );
 };
 
 export default ChatContent;
