@@ -14,14 +14,19 @@ const AppWrapper = styled.div`
 
 function App() {
   const [ view, setView ] = useState('LANDING');
-  const [ participants, setParticipants ] = useState({});
+  const [ participants, setParticipants ] = useState(null);
+
+  useEffect(() => {
+    console.log(participants);
+  }, [participants])
 
   return (
     <AppWrapper>
       {view === 'LANDING' && <Landing setView={setView} />}
       {view === 'CHAT' && <ChatContent 
         setView={setView} 
-        setParticipants={setParticipants} 
+        setParticipants={setParticipants}
+        participants={participants} 
       />}
       {view === 'SUMMARY' && <Summary />}
     </AppWrapper>
