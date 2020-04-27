@@ -3,18 +3,24 @@ import styled from 'styled-components';
 import Chat from './Chat';
 import ParticipantList from './ParticipantList';
 
+const ChatWrapper = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+`
+
 type ChatContentProps = {
   setView: any,
   setParticipants: any,
+  participants: any,
 };
 
-const ChatContent = ({ setParticipants, setView }: ChatContentProps) => {
+const ChatContent = ({ participants, setParticipants, setView }: ChatContentProps) => {
 
   return(
-    <div>
+    <ChatWrapper>
       <Chat setView={setView} setParticipants={setParticipants} />
-      <ParticipantList />
-    </div>
+      <ParticipantList participants={participants} />
+    </ChatWrapper>
   );
 };
 

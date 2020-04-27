@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import DailyIframe from '@daily-co/daily-js';
+import formatParticipantsData from '../../lib/formatParticipantsData';
 
 const Container = styled.div`
   width: 60vw;
@@ -21,16 +22,29 @@ const Chat = ({setView, setParticipants} : ChatProps) => {
         iframeStyle: {
           width: '60vw',
           height: '600px',
-          borderRadius: '15px',
+          borderTopRightRadius: '15px',
+          borderBottomRightRadius: '15px',
         }
       });
       callFrame.join({ url: process.env.DAILY_URL });
       callFrame.on('joined-meeting', () => {
-        setParticipants(callFrame.participants());
+        const data = callFrame.participants();
+        const participantsData = formatParticipantsData(data);
+        setParticipants(participantsData);
       })
-      callFrame.on('left-meeting', () => {
+      .on('participant-joined', () => {
+        const data = callFrame.participants();
+        const participantsData = formatParticipantsData(data);
+        setParticipants(participantsData);
+      })
+      .on('left-meeting', () => {
         callFrame.destroy();
         setView('SUMMARY');
+      })
+      .on('participant-left', () => {
+        const data = callFrame.participants();
+        const participantsData = formatParticipantsData(data);
+        setParticipants(participantsData);
       })
   }, [setView, setParticipants]);
 
