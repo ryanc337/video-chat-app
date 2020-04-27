@@ -10,10 +10,11 @@ const Container = styled.div`
 
 type ChatProps = {
   setView: any,
-  setParticipants: any
+  setParticipants: any,
+  setHasLeftMeeting: any;
 };
 
-const Chat = ({setView, setParticipants} : ChatProps) => {
+const Chat = ({setView, setParticipants, setHasLeftMeeting} : ChatProps) => {
   const frameRef = useRef(null);
 
   useEffect(() => {
@@ -37,11 +38,12 @@ const Chat = ({setView, setParticipants} : ChatProps) => {
         const participantsData = formatParticipantsData(data);
         setParticipants(participantsData);
       })
-      .on('left-meeting', () => {
+      .on('left-meeting', (evt) => {
+        setHasLeftMeeting(true);
         callFrame.destroy();
         setView('SUMMARY');
       })
-      .on('participant-left', () => {
+      .on('participant-left', (evt) => {
         const data = callFrame.participants();
         const participantsData = formatParticipantsData(data);
         setParticipants(participantsData);

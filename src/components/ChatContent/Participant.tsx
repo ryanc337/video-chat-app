@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import getColor from '../../lib/getColor';
+import formatTime from '../../lib/formatTime';
 
 const ParticipantCard = styled.div`
   border-bottom: 1px solid black;
@@ -27,42 +28,45 @@ const Icon = styled.div`
 
 type ParticipantProps = {
   participant: any,
-  index: number
+  index: number,
+  setParticipants: any,
+  view: string,
+  hasLeftMeeting: boolean;
 }
 
-const Participant = ({participant, index} : ParticipantProps) => {
-  const [ duration, setDuration ] = useState({
-    timeJoined: Date.now(),
-    time: 0
-  });
+const Participant = ({participant, index, setParticipants, view, hasLeftMeeting} : ParticipantProps) => {
   const [ participantNumber, setParticipantNumber ] = useState(0);
+  const [timerId, setTimerId] = useState({
+    timer: '',
+  });
 
   useEffect(() => {
-    setParticipantNumber(index + 1);
-
-    setInterval(() => {
-      setDuration(prevState => {
-        return({
-          ...prevState,
-          time: Date.now() - duration.timeJoined
-        })
-      })
-    }, 10);
-  }, []);
-
-  const formatTime = (time) => {
-    let seconds = ("0" + (Math.floor(time / 1000) % 60)).slice(-2);
-    let minutes = ("0" + (Math.floor(time / 60000) % 60)).slice(-2);
-    let hours = ("0" + Math.floor(time / 3600000)).slice(-2);
-    return `${hours} : ${minutes} : ${seconds}`;
-  }
+    if (!hasLeftMeeting) {
+      setParticipantNumber(index + 1);
+      const timeJoined = Date.now();
+      let timer = setInterval(() => {
+        setParticipants(prevState => {
+          const newParts = prevState.map((part) => {
+            if (part.user_id === participant.user_id) {
+              part.duration = Date.now() - timeJoined;
+            }
+              return part;
+            })
+            return newParts;
+          })
+      }, 10);
+      setTimerId({ timer: timer })
+    } else {
+      clearInterval(timerId.timer);
+    }
+  }, [hasLeftMeeting]);
 
   return (
     <ParticipantCard>
       <Icon style={{backgroundColor: getColor(participantNumber)}}>{participant.user_name ? participant.user_name[0] : participantNumber}</Icon>
       <div>
         <Name>{participant.user_name ? participant.user_name : `Participant ${participantNumber}`}</Name>
-        <Time>{formatTime(duration.time)}</Time>
+        {participant.duration && <Time>{formatTime(participant.duration)}</Time>}
       </div>
     </ParticipantCard>
   )
