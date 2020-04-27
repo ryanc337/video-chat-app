@@ -14,14 +14,15 @@ type ParticipantListProps = {
   participants: any,
   setParticipants: any,
   view: string,
+  activeSpeaker: any,
   hasLeftMeeting: boolean;
 }
 
-const ParticipantList = ({participants, setParticipants, view, hasLeftMeeting } : ParticipantListProps) => {
+const ParticipantList = ({participants, setParticipants, view, hasLeftMeeting, activeSpeaker } : ParticipantListProps) => {
   return(
   <ListWrapper>
     {participants && participants.map((part, index) => {
-      return ( <Participant key={part.user_id} index={index} participant={part} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting}/>);
+      return ( <Participant key={part.user_id} index={index} participant={part} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting} activeSpeaker={activeSpeaker}/>);
     })}
   </ListWrapper>
   )

@@ -16,6 +16,7 @@ function App() {
   const [ view, setView ] = useState('LANDING');
   const [ participants, setParticipants ] = useState(null);
   const [hasLeftMeeting, setHasLeftMeeting] = useState(false);
+  const [ activeSpeaker, setActiveSpeaker ] = useState(null);
 
   return (
     <AppWrapper>
@@ -26,6 +27,8 @@ function App() {
         participants={participants}
         hasLeftMeeting={hasLeftMeeting}
         setHasLeftMeeting={setHasLeftMeeting}
+        setActiveSpeaker={setActiveSpeaker}
+        activeSpeaker={activeSpeaker}
         view={view}
       />}
       {view === 'SUMMARY' && <Summary participants={participants} hasLeftMeeting={hasLeftMeeting}/>}

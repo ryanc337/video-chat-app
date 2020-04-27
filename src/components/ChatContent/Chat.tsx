@@ -10,11 +10,12 @@ const Container = styled.div`
 
 type ChatProps = {
   setView: any,
+  setActiveSpeaker: any,
   setParticipants: any,
   setHasLeftMeeting: any;
 };
 
-const Chat = ({setView, setParticipants, setHasLeftMeeting} : ChatProps) => {
+const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker} : ChatProps) => {
   const frameRef = useRef(null);
 
   useEffect(() => {
@@ -40,6 +41,7 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting} : ChatProps) => {
       })
       .on('left-meeting', (evt) => {
         setHasLeftMeeting(true);
+        setActiveSpeaker(null);
         callFrame.destroy();
         setView('SUMMARY');
       })
@@ -47,6 +49,13 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting} : ChatProps) => {
         const data = callFrame.participants();
         const participantsData = formatParticipantsData(data);
         setParticipants(participantsData);
+      })
+      .on('active-speaker-change', (evt) => {
+        setActiveSpeaker({
+          user_id: evt.activeSpeaker.peerId,
+          time_start: Date.now()
+        });
+        console.log(evt);
       })
   }, [setView, setParticipants]);
 

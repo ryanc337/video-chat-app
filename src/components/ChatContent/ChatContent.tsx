@@ -15,14 +15,16 @@ type ChatContentProps = {
   view: string,
   hasLeftMeeting: boolean;
   setHasLeftMeeting: boolean;
+  activeSpeaker: any,
+  setActiveSpeaker: any,
 };
 
-const ChatContent = ({ participants, setParticipants, setView, view, hasLeftMeeting, setHasLeftMeeting }: ChatContentProps) => {
+const ChatContent = ({ participants, setParticipants, setView, view, hasLeftMeeting, setHasLeftMeeting, setActiveSpeaker, activeSpeaker }: ChatContentProps) => {
 
   return(
     <ChatWrapper>
-      <Chat setView={setView} setParticipants={setParticipants} setHasLeftMeeting={setHasLeftMeeting}/>
-      <ParticipantList participants={participants} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting} />
+      <Chat setView={setView} setParticipants={setParticipants} setHasLeftMeeting={setHasLeftMeeting} setActiveSpeaker={setActiveSpeaker} />
+      <ParticipantList participants={participants} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting} activeSpeaker={activeSpeaker} />
     </ChatWrapper>
   );
 };
