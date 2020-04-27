@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import formatTime from '../lib/formatTime';
 
-const Summary = () => {
+type SummaryProps = {
+  participants: any,
+  hasLeftMeeting: boolean;
+}
+
+const Summary = ({participants, hasLeftMeeting} : SummaryProps) => {
   return(
     <div>
-      Summary
+      {`You Were in the call for ${participants.map(part => part.local ? formatTime(part.duration) : 'nope')}!`}
     </div>
   )
 };

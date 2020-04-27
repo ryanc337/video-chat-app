@@ -15,10 +15,7 @@ const AppWrapper = styled.div`
 function App() {
   const [ view, setView ] = useState('LANDING');
   const [ participants, setParticipants ] = useState(null);
-
-  useEffect(() => {
-    console.log(participants);
-  }, [participants])
+  const [hasLeftMeeting, setHasLeftMeeting] = useState(false);
 
   return (
     <AppWrapper>
@@ -26,9 +23,12 @@ function App() {
       {view === 'CHAT' && <ChatContent 
         setView={setView} 
         setParticipants={setParticipants}
-        participants={participants} 
+        participants={participants}
+        hasLeftMeeting={hasLeftMeeting}
+        setHasLeftMeeting={setHasLeftMeeting}
+        view={view}
       />}
-      {view === 'SUMMARY' && <Summary />}
+      {view === 'SUMMARY' && <Summary participants={participants} hasLeftMeeting={hasLeftMeeting}/>}
     </AppWrapper>
   );
 }

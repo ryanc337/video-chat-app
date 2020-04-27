@@ -12,13 +12,16 @@ const ListWrapper = styled.div`
 
 type ParticipantListProps = {
   participants: any,
+  setParticipants: any,
+  view: string,
+  hasLeftMeeting: boolean;
 }
 
-const ParticipantList = ({participants} : ParticipantListProps) => {
+const ParticipantList = ({participants, setParticipants, view, hasLeftMeeting } : ParticipantListProps) => {
   return(
   <ListWrapper>
     {participants && participants.map((part, index) => {
-      return ( <Participant key={part.user_id} index={index} participant={part}/>);
+      return ( <Participant key={part.user_id} index={index} participant={part} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting}/>);
     })}
   </ListWrapper>
   )
