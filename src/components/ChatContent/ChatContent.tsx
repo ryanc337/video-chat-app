@@ -6,7 +6,10 @@ import ParticipantList from './ParticipantList';
 const ChatWrapper = styled.div`
   display: flex;
   flex-direction: row-reverse;
-`
+  ${({ loading }) => loading && `
+  visibility: hidden;
+  `}
+`;
 
 type ChatContentProps = {
   setView: any,
@@ -15,14 +18,18 @@ type ChatContentProps = {
   view: string,
   hasLeftMeeting: boolean;
   setHasLeftMeeting: boolean;
+  activeSpeaker: any,
+  setActiveSpeaker: any,
+  isLoading: boolean;
+  setIsLoading: boolean;
 };
 
-const ChatContent = ({ participants, setParticipants, setView, view, hasLeftMeeting, setHasLeftMeeting }: ChatContentProps) => {
+const ChatContent = ({ participants, setParticipants, setView, view, hasLeftMeeting, setHasLeftMeeting, setActiveSpeaker, activeSpeaker, isLoading, setIsLoading }: ChatContentProps) => {
 
   return(
-    <ChatWrapper>
-      <Chat setView={setView} setParticipants={setParticipants} setHasLeftMeeting={setHasLeftMeeting}/>
-      <ParticipantList participants={participants} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting} />
+    <ChatWrapper loading={isLoading}>
+      <Chat setView={setView} setParticipants={setParticipants} setHasLeftMeeting={setHasLeftMeeting} setActiveSpeaker={setActiveSpeaker} setIsLoading={setIsLoading} />
+      <ParticipantList participants={participants} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting} activeSpeaker={activeSpeaker} />
     </ChatWrapper>
   );
 };

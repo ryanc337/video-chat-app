@@ -10,11 +10,13 @@ const Container = styled.div`
 
 type ChatProps = {
   setView: any,
+  setActiveSpeaker: any,
   setParticipants: any,
-  setHasLeftMeeting: any;
+  setHasLeftMeeting: any,
+  setIsLoading: any,
 };
 
-const Chat = ({setView, setParticipants, setHasLeftMeeting} : ChatProps) => {
+const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, setIsLoading} : ChatProps) => {
   const frameRef = useRef(null);
 
   useEffect(() => {
@@ -27,11 +29,13 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting} : ChatProps) => {
           borderBottomRightRadius: '15px',
         }
       });
-      callFrame.join({ url: process.env.DAILY_URL });
+      callFrame.join({ url: 'https://introwise.daily.co/ryan' });
       callFrame.on('joined-meeting', () => {
+        setView('CHAT');
         const data = callFrame.participants();
         const participantsData = formatParticipantsData(data);
         setParticipants(participantsData);
+        setIsLoading(false);
       })
       .on('participant-joined', () => {
         const data = callFrame.participants();
@@ -40,6 +44,7 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting} : ChatProps) => {
       })
       .on('left-meeting', (evt) => {
         setHasLeftMeeting(true);
+        setActiveSpeaker(null);
         callFrame.destroy();
         setView('SUMMARY');
       })
@@ -47,6 +52,13 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting} : ChatProps) => {
         const data = callFrame.participants();
         const participantsData = formatParticipantsData(data);
         setParticipants(participantsData);
+      })
+      .on('active-speaker-change', (evt) => {
+        setActiveSpeaker({
+          user_id: evt.activeSpeaker.peerId,
+          time_start: Date.now()
+        });
+        console.log(evt);
       })
   }, [setView, setParticipants]);
 

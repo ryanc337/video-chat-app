@@ -7,6 +7,7 @@ const ParticipantCard = styled.div`
   border-bottom: 1px solid black;
   display: flex;
   flex-direction: row;
+  border-top-left-radius: 15px;
 `;
 
 const Name = styled.div`
@@ -31,38 +32,83 @@ type ParticipantProps = {
   index: number,
   setParticipants: any,
   view: string,
+  activeSpeaker: any,
   hasLeftMeeting: boolean;
 }
 
-const Participant = ({participant, index, setParticipants, view, hasLeftMeeting} : ParticipantProps) => {
-  const [ participantNumber, setParticipantNumber ] = useState(0);
+const Participant = ({participant, index, setParticipants, view, hasLeftMeeting, activeSpeaker} : ParticipantProps) => {
+  const [ participantNumber, setParticipantNumber ] = useState(index + 1);
+  const [time, setTime ] = useState(Date.now());
+  const [isActive, setIsActive] = useState(false);
   const [timerId, setTimerId] = useState({
-    timer: '',
+    durationTimer: '',
+    activeTimer: ''
   });
 
+  //Track Duration Participant Was in Call
   useEffect(() => {
     if (!hasLeftMeeting) {
-      setParticipantNumber(index + 1);
-      const timeJoined = Date.now();
       let timer = setInterval(() => {
         setParticipants(prevState => {
           const newParts = prevState.map((part) => {
             if (part.user_id === participant.user_id) {
-              part.duration = Date.now() - timeJoined;
+              part.participant_number = participantNumber;
+              part.duration = Date.now() - time;
             }
               return part;
             })
             return newParts;
           })
       }, 10);
-      setTimerId({ timer: timer })
+      setTimerId((prevState) => 
+      { 
+        return( {
+          ...prevState, 
+          durationTimer: timer
+        }) 
+      })
     } else {
-      clearInterval(timerId.timer);
+      clearInterval(timerId.durationTimer);
     }
   }, [hasLeftMeeting]);
 
+  //Track Active Speaking Time
+  useEffect(() => {
+    let active;
+    if (activeSpeaker) {
+      let timer = setInterval(() => {
+        setParticipants(prevState => {
+          const newParts = prevState.map((part) => {
+            if (part.user_id === participant.user_id) {
+              active = true;
+              if (part.user_id === activeSpeaker.user_id) {
+                part.active_duration = Date.now() - activeSpeaker.time_start;
+              }
+            } else {
+              active = false;
+            }
+            return part;
+          })
+          return newParts;
+        })
+        setIsActive(active);
+      }, 10);
+      setTimerId((prevState) => 
+      { 
+        return( {
+          ...prevState, 
+          activeTimer: timer
+        }) 
+      })
+      console.log(timerId);
+    } else {
+      clearInterval(timerId.activeTimer);
+    }
+
+  }, [activeSpeaker])
+
   return (
-    <ParticipantCard>
+    <ParticipantCard style={{backgroundColor: isActive ? '#bbeffa' : 'ffffff'}}>
       <Icon style={{backgroundColor: getColor(participantNumber)}}>{participant.user_name ? participant.user_name[0] : participantNumber}</Icon>
       <div>
         <Name>{participant.user_name ? participant.user_name : `Participant ${participantNumber}`}</Name>
