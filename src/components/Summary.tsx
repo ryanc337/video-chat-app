@@ -48,7 +48,9 @@ type SummaryProps = {
 }
 
 const Summary = ({participants, resetState} : SummaryProps) => {
-  console.log(participants);
+  useEffect(() => {
+    console.log(participants);
+  }, [participants]);
 
   return(
     <Wrapper>

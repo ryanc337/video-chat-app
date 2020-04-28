@@ -15,7 +15,7 @@ const ParticipantCard = styled.div`
   `}
 
   ${({ isFirst }) => isFirst && `
-  border-top-left-radius: 15px;
+  border-top-left-radius: 7px;
   `}
 `;
 

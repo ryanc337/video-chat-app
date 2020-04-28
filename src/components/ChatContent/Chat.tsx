@@ -15,7 +15,7 @@ type ChatProps = {
   setParticipants: any,
   setHasLeftMeeting: any,
   setIsLoading: any,
-  participants: [] | null;
+  participants: any;
 };
 
 const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, setIsLoading, participants} : ChatProps) => {
@@ -32,15 +32,35 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, se
         }
       });
       callFrame.join({ url: 'https://introwise.daily.co/ryan' });
-      callFrame.on('joined-meeting', () => {
+      callFrame.on('participant-updated', (evt) => {
+        if (callFrame.meetingState() !== 'joining-meeting') {
+          setParticipants(prevState => {
+            return prevState.map((part) => {
+              if (part.user_id === evt.participant.user_id) {
+                part.video = evt.participant.video;
+                return part;
+              } else {
+                return part;
+              }
+            })
+          })
+        }
+        console.log(callFrame.meetingState());
+      })
+      .on('joined-meeting', (evt) => {
         setView('CHAT');
+        console.log(evt);
         const data = callFrame.participants();
         const participantsData = formatParticipantsData(data);
         setParticipants(participantsData);
+        setActiveSpeaker({
+          user_id: evt.participants.local.user_id,
+          time_start: Date.now()
+        });
         setIsLoading(false);
+        console.log('joined');
       })
       .on('participant-joined', (evt) => {
-        console.log(evt);
         const data = callFrame.participants();
           setParticipants((prevState) => {
             evt.participant.is_in_call = true;
@@ -77,9 +97,6 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, se
           user_id: evt.activeSpeaker.peerId,
           time_start: Date.now()
         });
-        console.log(evt);
-      })
-      .on('participant-updated', (evt) => {
         console.log(evt);
       })
   }, [setView, setParticipants]);
