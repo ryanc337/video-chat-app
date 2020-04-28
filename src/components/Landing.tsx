@@ -38,7 +38,7 @@ const Button = styled.button`
   background-color: #d6d6d6;
   font-size: 16px;
   font-weight: 400;
-`
+`;
 
 type LandingProps = {
   setView: any,

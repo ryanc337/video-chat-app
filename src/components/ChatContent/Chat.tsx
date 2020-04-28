@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import DailyIframe from '@daily-co/daily-js';
 import formatParticipantsData from '../../lib/formatParticipantsData';
+import Participant from './Participant';
 
 const Container = styled.div`
   width: 60vw;
@@ -14,9 +15,10 @@ type ChatProps = {
   setParticipants: any,
   setHasLeftMeeting: any,
   setIsLoading: any,
+  participants: any;
 };
 
-const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, setIsLoading} : ChatProps) => {
+const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, setIsLoading, participants} : ChatProps) => {
   const frameRef = useRef(null);
 
   useEffect(() => {
@@ -30,17 +32,46 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, se
         }
       });
       callFrame.join({ url: 'https://introwise.daily.co/ryan' });
-      callFrame.on('joined-meeting', () => {
-        setView('CHAT');
-        const data = callFrame.participants();
-        const participantsData = formatParticipantsData(data);
-        setParticipants(participantsData);
-        setIsLoading(false);
+      callFrame.on('participant-updated', (evt) => {
+        if (callFrame.meetingState() !== 'joining-meeting') {
+          setParticipants(prevState => {
+            return prevState.map((part) => {
+              if (part.user_id === evt.participant.user_id) {
+                part.video = evt.participant.video;
+                return part;
+              } else {
+                return part;
+              }
+            })
+          })
+        }
+        console.log(callFrame.meetingState());
       })
-      .on('participant-joined', () => {
+      .on('joined-meeting', (evt) => {
+        setView('CHAT');
+        console.log(evt);
         const data = callFrame.participants();
         const participantsData = formatParticipantsData(data);
         setParticipants(participantsData);
+        setActiveSpeaker({
+          user_id: evt.participants.local.user_id,
+          time_start: Date.now()
+        });
+        setIsLoading(false);
+        console.log('joined');
+      })
+      .on('participant-joined', (evt) => {
+        const data = callFrame.participants();
+          setParticipants((prevState) => {
+            evt.participant.is_in_call = true;
+            if (prevState) {
+              console.log(evt.participant);
+              return prevState.concat([evt.participant]);
+            } else {
+              const participantsData = formatParticipantsData(data);
+              return participantsData;
+            }
+          });
       })
       .on('left-meeting', (evt) => {
         setHasLeftMeeting(true);
@@ -49,9 +80,17 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, se
         setView('SUMMARY');
       })
       .on('participant-left', (evt) => {
-        const data = callFrame.participants();
-        const participantsData = formatParticipantsData(data);
-        setParticipants(participantsData);
+        setParticipants((prevState) => {
+          return prevState.map((part) => {
+            if (part.user_id === evt.participant.user_id) {
+              part.is_in_call = false;
+              return part;
+            } else {
+              return part;
+            }
+          })
+        });
+        console.log(evt.participant.user_id);
       })
       .on('active-speaker-change', (evt) => {
         setActiveSpeaker({

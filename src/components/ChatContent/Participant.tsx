@@ -4,18 +4,43 @@ import getColor from '../../lib/getColor';
 import formatTime from '../../lib/formatTime';
 
 const ParticipantCard = styled.div`
-  border-bottom: 1px solid black;
   display: flex;
   flex-direction: row;
-  border-top-left-radius: 15px;
+  background-color: #f2f7fa;
+  height: 50px;
+  align-items: center;
+
+  ${({ active }) => active && `
+  background-color: #6355e6;
+  `}
+
+  ${({ isFirst }) => isFirst && `
+  border-top-left-radius: 7px;
+  `}
 `;
 
 const Name = styled.div`
   font-size: 16px;
+  color: #6355e6;
+
+  ${({ active }) => active && `
+  color: #f2f7fa;
+  `}
+`;
+
+const InfoHolder = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 8px;
 `
 
 const Time = styled.div`
   font-size: 12px;
+  color: #7d8c9e;
+
+  ${({ active }) => active && `
+  color: #f2f7fa;
+  `}
 `
 const Icon = styled.div`
   border-radius: 50%;
@@ -54,6 +79,9 @@ const Participant = ({participant, index, setParticipants, view, hasLeftMeeting,
             if (part.user_id === participant.user_id) {
               part.participant_number = participantNumber;
               part.duration = Date.now() - time;
+              if (part.video) {
+                part.hasOwnProperty('video_duration') ? part.video_duration += 5 : part.video_duration = 5;
+              }
             }
               return part;
             })
@@ -108,12 +136,12 @@ const Participant = ({participant, index, setParticipants, view, hasLeftMeeting,
   }, [activeSpeaker])
 
   return (
-    <ParticipantCard style={{backgroundColor: isActive ? '#bbeffa' : 'ffffff'}}>
+    <ParticipantCard active={isActive} isFirst={index === 0}>
       <Icon style={{backgroundColor: getColor(participantNumber)}}>{participant.user_name ? participant.user_name[0] : participantNumber}</Icon>
-      <div>
-        <Name>{participant.user_name ? participant.user_name : `Participant ${participantNumber}`}</Name>
-        {participant.duration && <Time>{formatTime(participant.duration)}</Time>}
-      </div>
+      <InfoHolder>
+        <Name active={isActive}>{participant.user_name ? participant.user_name : `Participant ${participantNumber}`}</Name>
+        {participant.duration && <Time active={isActive}>Time in Call: {formatTime(participant.duration)}</Time>}
+      </InfoHolder>
     </ParticipantCard>
   )
 };

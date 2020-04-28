@@ -16,9 +16,17 @@ const AppWrapper = styled.div`
 function App() {
   const [ view, setView ] = useState('LANDING');
   const [ participants, setParticipants ] = useState(null);
-  const [hasLeftMeeting, setHasLeftMeeting] = useState(false);
+  const [ hasLeftMeeting, setHasLeftMeeting ] = useState(false);
   const [ isLoading, setIsLoading ] = useState(false);
   const [ activeSpeaker, setActiveSpeaker ] = useState(null);
+
+  const resetState = () => {
+    setView('LANDING');
+    setParticipants(null);
+    setHasLeftMeeting(false);
+    setIsLoading(false);
+    setActiveSpeaker(null);
+  }
 
   return (
     <AppWrapper>
@@ -35,7 +43,7 @@ function App() {
         isLoading={isLoading}
         setIsLoading={setIsLoading}
       />}
-      {view === 'SUMMARY' && <Summary participants={participants} hasLeftMeeting={hasLeftMeeting}/>}
+      {view === 'SUMMARY' && <Summary participants={participants} resetState={resetState}/>}
       {isLoading && <Loading />}
     </AppWrapper>
   );

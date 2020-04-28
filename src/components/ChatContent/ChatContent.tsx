@@ -6,6 +6,11 @@ import ParticipantList from './ParticipantList';
 const ChatWrapper = styled.div`
   display: flex;
   flex-direction: row-reverse;
+  border-radius: 15px;
+  -webkit-box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
+  box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
+
   ${({ loading }) => loading && `
   visibility: hidden;
   `}
@@ -28,7 +33,7 @@ const ChatContent = ({ participants, setParticipants, setView, view, hasLeftMeet
 
   return(
     <ChatWrapper loading={isLoading}>
-      <Chat setView={setView} setParticipants={setParticipants} setHasLeftMeeting={setHasLeftMeeting} setActiveSpeaker={setActiveSpeaker} setIsLoading={setIsLoading} />
+      <Chat setView={setView} setParticipants={setParticipants} setHasLeftMeeting={setHasLeftMeeting} setActiveSpeaker={setActiveSpeaker} setIsLoading={setIsLoading} participants={participants}/>
       <ParticipantList participants={participants} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting} activeSpeaker={activeSpeaker} />
     </ChatWrapper>
   );
