@@ -12,10 +12,11 @@ type ChatProps = {
   setView: any,
   setActiveSpeaker: any,
   setParticipants: any,
-  setHasLeftMeeting: any;
+  setHasLeftMeeting: any,
+  setIsLoading: any,
 };
 
-const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker} : ChatProps) => {
+const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, setIsLoading} : ChatProps) => {
   const frameRef = useRef(null);
 
   useEffect(() => {
@@ -28,11 +29,13 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker} : 
           borderBottomRightRadius: '15px',
         }
       });
-      callFrame.join({ url: process.env.DAILY_URL });
+      callFrame.join({ url: 'https://introwise.daily.co/ryan' });
       callFrame.on('joined-meeting', () => {
+        setView('CHAT');
         const data = callFrame.participants();
         const participantsData = formatParticipantsData(data);
         setParticipants(participantsData);
+        setIsLoading(false);
       })
       .on('participant-joined', () => {
         const data = callFrame.participants();

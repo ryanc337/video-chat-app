@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Participant from './Participant';
 
 const ListWrapper = styled.div`
-  height: 600px;
+  height: 602px;
   background-color: #ffffff;
   width: 200px;
   border-top-left-radius: 15px;

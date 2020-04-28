@@ -4,37 +4,58 @@ import styled from 'styled-components';
 const LandingWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
-  height: 300px;
-  width: 60vw;
+  background-color: #f2f7fa;
+  height: 200px;
+  width: 40vw;
   border: 1px solid black;
   border-radius: 15px;
+  justify-content: center;
   align-items: center;
+  -webkit-box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
+  box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
 `;
 
 const Header = styled.h1`
   text-align: center;
+  font-weight: 500;
+  margin: 10px 0;
 `
 
 const SubTitle = styled.h3`
+  margin: 10px 0;
   text-align: center;
+  font-weight: 400;
 `
 
 const Button = styled.button`
-  width: 80px;
+  width: 100px;
+  margin: 10px 0;
+  text-align: center;
   height: 40px;
+  border-radius: 15px;
+  border: 1px solid black;
+  background-color: #d6d6d6;
+  font-size: 16px;
+  font-weight: 400;
 `
 
 type LandingProps = {
-  setView: any
+  setView: any,
+  setIsLoading: any
 }
 
-const Landing = ({ setView }: LandingProps) => {
+const Landing = ({ setView, setIsLoading }: LandingProps) => {
+  const handleClick = () => {
+    setView('CHAT');
+    setIsLoading(true);
+  }
+
   return (
     <LandingWrapper>
-      <Header>Welcome</Header>
-      <SubTitle>Join a Room!</SubTitle>
-      <Button onClick={() => setView('CHAT')}>Join Call</Button>
+      <Header>Welcome to Video Chat</Header>
+      <SubTitle>Join a party!</SubTitle>
+      <Button onClick={handleClick}>Join Call</Button>
     </LandingWrapper>
   )
 }
