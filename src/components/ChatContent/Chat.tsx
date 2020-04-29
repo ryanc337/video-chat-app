@@ -15,10 +15,11 @@ type ChatProps = {
   setParticipants: any,
   setHasLeftMeeting: any,
   setIsLoading: any,
-  participants: any;
+  participants: any,
+  setStartTimer: any
 };
 
-const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, setIsLoading, participants} : ChatProps) => {
+const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, setIsLoading, participants, setStartTimer} : ChatProps) => {
   const frameRef = useRef(null);
 
   useEffect(() => {
@@ -52,31 +53,34 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, se
         console.log(evt);
         const data = callFrame.participants();
         const participantsData = formatParticipantsData(data);
+        participantsData[0].active = true;
         setParticipants(participantsData);
         setActiveSpeaker({
           user_id: evt.participants.local.user_id,
           time_start: Date.now()
         });
+        setStartTimer(true);
         setIsLoading(false);
         console.log(evt);
       })
       .on('participant-joined', (evt) => {
-        const data = callFrame.participants();
           setParticipants((prevState) => {
             evt.participant.is_in_call = true;
-            if (prevState) {
-              console.log(evt.participant);
-              return prevState.concat([evt.participant]);
-            } else {
-              const participantsData = formatParticipantsData(data);
-              return participantsData;
-            }
+            evt.participant.initial = Date.now();
+            console.log(evt.participant);
+            return prevState.concat([evt.participant]);
           });
-          console.log(evt);
       })
       .on('left-meeting', (evt) => {
+        setParticipants((prevState) => {
+          return prevState.map((part) => {
+            part.is_in_call = false;
+            return part;
+          })
+        });
         setHasLeftMeeting(true);
         setActiveSpeaker(null);
+        setStartTimer(false);
         callFrame.destroy();
         setView('SUMMARY');
         console.log(evt);
@@ -99,6 +103,16 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, se
           user_id: evt.activeSpeaker.peerId,
           time_start: Date.now()
         });
+        setParticipants((prevState) => {
+          return prevState.map((part) => {
+            if (part.user_id === evt.activeSpeaker.peerId) {
+              part.active = true;
+            } else {
+              part.active = false;
+            }
+            return part;
+          })
+        })
         console.log(evt);
       })
   }, [setView, setParticipants]);

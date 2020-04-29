@@ -53,101 +53,23 @@ const Icon = styled.div`
 `
 
 type ParticipantProps = {
-  participant: any,
+  userName: string,
   index: number,
-  setParticipants: any,
-  view: string,
-  activeSpeaker: any,
-  hasLeftMeeting: boolean;
+  duration: number,
+  isActive: boolean;
   isInCall: boolean;
 }
 
-const Participant = ({participant, index, setParticipants, view, hasLeftMeeting, activeSpeaker, isInCall} : ParticipantProps) => {
-  const [ participantNumber, setParticipantNumber ] = useState(index + 1);
-  const [time, setTime ] = useState(Date.now());
-  const [isActive, setIsActive] = useState(false);
-  const [timerId, setTimerId] = useState({
-    durationTimer: '',
-    activeTimer: ''
-  });
+const Participant = ({isInCall, isActive, userName, index, duration} : ParticipantProps) => {
 
-  //Track Duration Participant Was in Call
-  useEffect(() => {
-    if (!hasLeftMeeting && isInCall) {
-      let timer = setInterval(() => {
-        setParticipants(prevState => {
-          const newParts = prevState.map((part) => {
-            if (part.user_id === participant.user_id) {
-              part.participant_number = participantNumber;
-              part.duration = Date.now() - time;
-              if (part.video) {
-                part.hasOwnProperty('video_duration') ? part.video_duration += 5 : part.video_duration = 5;
-              }
-            }
-              return part;
-            })
-            return newParts;
-          })
-      }, 10);
-      setTimerId((prevState) => 
-      { 
-        return( {
-          ...prevState, 
-          durationTimer: timer
-        }) 
-      })
-    } else {
-      console.log('cleared');
-      clearInterval(timerId.durationTimer);
-    }
-  }, [hasLeftMeeting]);
-
-  //Track Active Speaking Time
-  useEffect(() => {
-    let active;
-    if (activeSpeaker && activeSpeaker.user_id === participant.user_id) {
-      if (isInCall) {
-        let timer = setInterval(() => {
-          setParticipants(prevState => {
-            const newParts = prevState.map((part) => {
-              if (part.user_id === participant.user_id) {
-                active = true;
-                part.hasOwnProperty('active_duration') ? part.active_duration += 5 : part.active_duration = 5;
-              } else {
-                active = false;
-              }
-              return part;
-            })
-            return newParts;
-          })
-          setIsActive(active);
-        }, 10)
-        setTimerId((prevState) => 
-        { 
-          return( {
-            ...prevState, 
-            activeTimer: timer
-          }) 
-        })
-        console.log(timerId);
-      } else {
-        console.log('clearedactive');
-        clearInterval(timerId.activeTimer);
-      }
-    } else {
-      console.log('clearedactive');
-      clearInterval(timerId.activeTimer);
-    }
-
-  }, [activeSpeaker, isInCall])
 
   return (
     <div>
       {isInCall && <ParticipantCard active={isActive} isFirst={index === 0}>
-        <Icon style={{backgroundColor: getColor(participantNumber)}}>{participant.user_name ? participant.user_name[0] : participantNumber}</Icon>
+        <Icon style={{backgroundColor: getColor(index)}}>{userName ? userName[0] : index + 1}</Icon>
         <InfoHolder>
-          <Name active={isActive}>{participant.user_name ? participant.user_name : `Participant ${participantNumber}`}</Name>
-          {participant.duration && <Time active={isActive}>Time in Call: {formatTime(participant.duration)}</Time>}
+          <Name active={isActive}>{userName ? userName : `Participant ${index + 1}`}</Name>
+          {duration && <Time active={isActive}>Time in Call: {formatTime(duration)}</Time>}
         </InfoHolder>
       </ParticipantCard>}
     </div>
