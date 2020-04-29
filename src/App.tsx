@@ -15,10 +15,14 @@ const AppWrapper = styled.div`
 
 function App() {
   const [ view, setView ] = useState('LANDING');
-  const [ participants, setParticipants ] = useState(null);
+  const [ participants, setParticipants ] = useState([]);
   const [ hasLeftMeeting, setHasLeftMeeting ] = useState(false);
   const [ isLoading, setIsLoading ] = useState(false);
   const [ activeSpeaker, setActiveSpeaker ] = useState(null);
+
+  // useEffect(() => {
+  //   console.log(participants);
+  // },[participants]);
 
   const resetState = () => {
     setView('LANDING');

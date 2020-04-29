@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Chat from './Chat';
 import ParticipantList from './ParticipantList';
@@ -30,11 +30,12 @@ type ChatContentProps = {
 };
 
 const ChatContent = ({ participants, setParticipants, setView, view, hasLeftMeeting, setHasLeftMeeting, setActiveSpeaker, activeSpeaker, isLoading, setIsLoading }: ChatContentProps) => {
+const [startTimer, setStartTimer] = useState(false);
 
   return(
     <ChatWrapper loading={isLoading}>
-      <Chat setView={setView} setParticipants={setParticipants} setHasLeftMeeting={setHasLeftMeeting} setActiveSpeaker={setActiveSpeaker} setIsLoading={setIsLoading} participants={participants}/>
-      <ParticipantList participants={participants} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting} activeSpeaker={activeSpeaker} />
+      <Chat setView={setView} setStartTimer={setStartTimer} setParticipants={setParticipants} setHasLeftMeeting={setHasLeftMeeting} setActiveSpeaker={setActiveSpeaker} setIsLoading={setIsLoading} participants={participants}/>
+      <ParticipantList participants={participants} startTimer={startTimer} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting} activeSpeaker={activeSpeaker} />
     </ChatWrapper>
   );
 };

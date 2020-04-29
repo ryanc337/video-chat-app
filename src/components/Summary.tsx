@@ -1,20 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import ChatData from './ChatData';
 import formatTime from '../lib/formatTime';
 
 const Wrapper = styled.div`
-display: flex;
-flex-direction: column;
-background-color: #f2f7fa;
-height: 200px;
-width: 40vw;
-border: 1px solid black;
-border-radius: 15px;
-justify-content: center;
-align-items: center;
--webkit-box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
--moz-box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
-box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
+  display: flex;
+  flex-direction: column;
+  background-color: #f2f7fa;
+  height: 400px;
+  width: 50vw;
+  overflow: scroll;
+  border: 1px solid black;
+  border-radius: 15px;
+  -webkit-box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
+  box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
+
+  ${({ showChatData }) => !showChatData && `
+    justify-content: center;
+    align-items: center;
+  `}
 `;
 
 const Header = styled.h1`
@@ -30,6 +35,10 @@ const ButtonHolder = styled.div`
   margin-top: 20px;
 `;
 
+const Time = styled.div`
+  text-align: center;
+`
+
 const Button = styled.button`
   width: 120px;
   margin: 10px 0;
@@ -37,9 +46,10 @@ const Button = styled.button`
   height: 40px;
   border-radius: 15px;
   border: 1px solid black;
-  background-color: #d6d6d6;
+  background-color: #4287f5;
   font-size: 16px;
   font-weight: 400;
+  color: #f2f7fa;
 `;
 
 type SummaryProps = {
@@ -48,19 +58,19 @@ type SummaryProps = {
 }
 
 const Summary = ({participants, resetState} : SummaryProps) => {
-  useEffect(() => {
-    console.log(participants);
-  }, [participants]);
+  const [ showChatData, setShowChatData ] = useState(false);
 
   return(
-    <Wrapper>
-      <Header>Your call has ended</Header>
-      {`You were in the call for ${formatTime(participants.filter(part => part.local)[0].duration)}`}
-      <ButtonHolder>
-        <Button onClick={resetState}>Return Home</Button>
-        <Button>View Call Data</Button>
-      </ButtonHolder>
-
+    <Wrapper showChatData={showChatData}>
+      {!showChatData && <div>
+        <Header>Your call has ended</Header>
+        <Time>{`You were in the call for ${formatTime(participants.filter(part => part.local)[0].duration)}`}</Time>
+        <ButtonHolder>
+          <Button onClick={resetState}>Return Home</Button>
+          <Button onClick={() => setShowChatData(true)}>View Call Data</Button>
+        </ButtonHolder>
+      </div>}
+      {showChatData && <ChatData participants={participants}/>}
     </Wrapper>
   )
 };
