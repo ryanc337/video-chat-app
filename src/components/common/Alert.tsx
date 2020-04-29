@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Header, SubTitle, Button} from '../Common/Styles';
+import {Header, SubTitle, Button} from './Styles';
 
 const AlertWrapper = styled.div`
   display: flex;

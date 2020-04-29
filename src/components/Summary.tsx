@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import ChatData from './ChatData';
 import formatTime from '../lib/formatTime';
-import { Header, Button } from './Common/Styles';
+import { Header, Button } from './common/Styles';
 
 const SummaryWrapper = styled.div`
   display: flex;

@@ -1,7 +1,7 @@
 import React from 'react';
 import getColor from '../../lib/getColor';
 import formatTime from '../../lib/formatTime';
-import { ParticipantCard, InfoHolder, Name, Icon, Time } from '../Common/Styles';
+import { ParticipantCard, InfoHolder, Name, Icon, Time } from '../common/Styles';
 
 type ParticipantProps = {
   userName: string,

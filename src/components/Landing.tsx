@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Header, Button, SubTitle } from './Common/Styles';
+import { Header, Button, SubTitle } from './common/Styles';
 
 const LandingWrapper = styled.div`
   display: flex;

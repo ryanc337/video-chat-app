@@ -2,7 +2,7 @@ import React from 'react';
 import formatTime from '../lib/formatTime';
 import styled from 'styled-components';
 import getColor from '../lib/getColor';
-import { ParticipantCard, Name, InfoHolder, Time, Icon } from './Common/Styles';
+import { ParticipantCard, Name, InfoHolder, Time, Icon } from './common/Styles';
 
 type ChatDataProps = {
   participants: any,

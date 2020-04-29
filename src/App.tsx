@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Landing from './components/Landing';
 import ChatContent from './components/ChatContent/ChatContent';
-import Loading from './components/Common/Loading';
+import Loading from './components/common/Loading';
 import Summary from './components/Summary';
-import Alert from './components/Common/Alert';
+import Alert from './components/common/Alert';
 import './App.css';
 
 const AppWrapper = styled.div`
