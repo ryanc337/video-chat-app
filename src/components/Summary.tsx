@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import ChatData from './ChatData';
 import formatTime from '../lib/formatTime';
+import { Header, Button } from './Common/Styles';
 
-const Wrapper = styled.div`
+const SummaryWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #f2f7fa;
   height: 400px;
-  width: 50vw;
+  width: 650px;
   overflow: scroll;
   border: 1px solid black;
   border-radius: 15px;
@@ -22,12 +23,6 @@ const Wrapper = styled.div`
   `}
 `;
 
-const Header = styled.h1`
-  text-align: center;
-  font-weight: 500;
-  margin: 10px 0;
-`;
-
 const ButtonHolder = styled.div`
   display: flex;
   justify-content: space-evenly;
@@ -37,19 +32,13 @@ const ButtonHolder = styled.div`
 
 const Time = styled.div`
   text-align: center;
-`
+`;
 
-const Button = styled.button`
-  width: 120px;
-  margin: 10px 0;
-  text-align: center;
-  height: 40px;
-  border-radius: 15px;
-  border: 1px solid black;
-  background-color: #4287f5;
-  font-size: 16px;
-  font-weight: 400;
-  color: #f2f7fa;
+const ChatDataContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 type SummaryProps = {
@@ -61,7 +50,7 @@ const Summary = ({participants, resetState} : SummaryProps) => {
   const [ showChatData, setShowChatData ] = useState(false);
 
   return(
-    <Wrapper showChatData={showChatData}>
+    <SummaryWrapper showChatData={showChatData}>
       {!showChatData && <div>
         <Header>Your call has ended</Header>
         <Time>{`You were in the call for ${formatTime(participants.filter(part => part.local)[0].duration)}`}</Time>
@@ -70,8 +59,12 @@ const Summary = ({participants, resetState} : SummaryProps) => {
           <Button onClick={() => setShowChatData(true)}>View Call Data</Button>
         </ButtonHolder>
       </div>}
-      {showChatData && <ChatData participants={participants}/>}
-    </Wrapper>
+      {showChatData && <ChatDataContainer>
+        <Header>Chat Data</Header>
+        <ChatData participants={participants}/>
+        <Button onClick={() => (setShowChatData(false))}>Back</Button>
+      </ChatDataContainer>}
+    </SummaryWrapper>
   )
 };
 

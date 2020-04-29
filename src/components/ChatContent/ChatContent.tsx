@@ -20,22 +20,17 @@ type ChatContentProps = {
   setView: any,
   setParticipants: any,
   participants: any,
-  view: string,
-  hasLeftMeeting: boolean;
-  setHasLeftMeeting: boolean;
-  activeSpeaker: any,
-  setActiveSpeaker: any,
   isLoading: boolean;
   setIsLoading: boolean;
 };
 
-const ChatContent = ({ participants, setParticipants, setView, view, hasLeftMeeting, setHasLeftMeeting, setActiveSpeaker, activeSpeaker, isLoading, setIsLoading }: ChatContentProps) => {
+const ChatContent = ({ participants, setParticipants, setView, isLoading, setIsLoading }: ChatContentProps) => {
 const [startTimer, setStartTimer] = useState(false);
 
   return(
     <ChatWrapper loading={isLoading}>
-      <Chat setView={setView} setStartTimer={setStartTimer} setParticipants={setParticipants} setHasLeftMeeting={setHasLeftMeeting} setActiveSpeaker={setActiveSpeaker} setIsLoading={setIsLoading} participants={participants}/>
-      <ParticipantList participants={participants} startTimer={startTimer} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting} activeSpeaker={activeSpeaker} />
+      <Chat setView={setView} setStartTimer={setStartTimer} setParticipants={setParticipants} setIsLoading={setIsLoading}/>
+      <ParticipantList participants={participants} startTimer={startTimer} setParticipants={setParticipants} />
     </ChatWrapper>
   );
 };
