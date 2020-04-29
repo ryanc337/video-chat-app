@@ -20,6 +20,10 @@ function App() {
   const [ isLoading, setIsLoading ] = useState(false);
   const [ activeSpeaker, setActiveSpeaker ] = useState(null);
 
+  // useEffect(() => {
+  //   console.log(participants);
+  // },[participants]);
+
   const resetState = () => {
     setView('LANDING');
     setParticipants(null);

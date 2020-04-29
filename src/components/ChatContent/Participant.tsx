@@ -15,7 +15,7 @@ const ParticipantCard = styled.div`
   `}
 
   ${({ isFirst }) => isFirst && `
-  border-top-left-radius: 7px;
+  border-top-left-radius: 15px;
   `}
 `;
 
@@ -59,9 +59,10 @@ type ParticipantProps = {
   view: string,
   activeSpeaker: any,
   hasLeftMeeting: boolean;
+  isInCall: boolean;
 }
 
-const Participant = ({participant, index, setParticipants, view, hasLeftMeeting, activeSpeaker} : ParticipantProps) => {
+const Participant = ({participant, index, setParticipants, view, hasLeftMeeting, activeSpeaker, isInCall} : ParticipantProps) => {
   const [ participantNumber, setParticipantNumber ] = useState(index + 1);
   const [time, setTime ] = useState(Date.now());
   const [isActive, setIsActive] = useState(false);
@@ -72,7 +73,7 @@ const Participant = ({participant, index, setParticipants, view, hasLeftMeeting,
 
   //Track Duration Participant Was in Call
   useEffect(() => {
-    if (!hasLeftMeeting) {
+    if (!hasLeftMeeting && isInCall) {
       let timer = setInterval(() => {
         setParticipants(prevState => {
           const newParts = prevState.map((part) => {
@@ -96,6 +97,7 @@ const Participant = ({participant, index, setParticipants, view, hasLeftMeeting,
         }) 
       })
     } else {
+      console.log('cleared');
       clearInterval(timerId.durationTimer);
     }
   }, [hasLeftMeeting]);
@@ -103,46 +105,52 @@ const Participant = ({participant, index, setParticipants, view, hasLeftMeeting,
   //Track Active Speaking Time
   useEffect(() => {
     let active;
-    if (activeSpeaker) {
-      let timer = setInterval(() => {
-        setParticipants(prevState => {
-          const newParts = prevState.map((part) => {
-            if (part.user_id === participant.user_id) {
-              active = true;
-              if (part.user_id === activeSpeaker.user_id) {
-                part.active_duration = Date.now() - activeSpeaker.time_start;
+    if (activeSpeaker && activeSpeaker.user_id === participant.user_id) {
+      if (isInCall) {
+        let timer = setInterval(() => {
+          setParticipants(prevState => {
+            const newParts = prevState.map((part) => {
+              if (part.user_id === participant.user_id) {
+                active = true;
+                part.hasOwnProperty('active_duration') ? part.active_duration += 5 : part.active_duration = 5;
+              } else {
+                active = false;
               }
-            } else {
-              active = false;
-            }
-            return part;
+              return part;
+            })
+            return newParts;
           })
-          return newParts;
+          setIsActive(active);
+        }, 10)
+        setTimerId((prevState) => 
+        { 
+          return( {
+            ...prevState, 
+            activeTimer: timer
+          }) 
         })
-        setIsActive(active);
-      }, 10);
-      setTimerId((prevState) => 
-      { 
-        return( {
-          ...prevState, 
-          activeTimer: timer
-        }) 
-      })
-      console.log(timerId);
+        console.log(timerId);
+      } else {
+        console.log('clearedactive');
+        clearInterval(timerId.activeTimer);
+      }
     } else {
+      console.log('clearedactive');
       clearInterval(timerId.activeTimer);
     }
 
-  }, [activeSpeaker])
+  }, [activeSpeaker, isInCall])
 
   return (
-    <ParticipantCard active={isActive} isFirst={index === 0}>
-      <Icon style={{backgroundColor: getColor(participantNumber)}}>{participant.user_name ? participant.user_name[0] : participantNumber}</Icon>
-      <InfoHolder>
-        <Name active={isActive}>{participant.user_name ? participant.user_name : `Participant ${participantNumber}`}</Name>
-        {participant.duration && <Time active={isActive}>Time in Call: {formatTime(participant.duration)}</Time>}
-      </InfoHolder>
-    </ParticipantCard>
+    <div>
+      {isInCall && <ParticipantCard active={isActive} isFirst={index === 0}>
+        <Icon style={{backgroundColor: getColor(participantNumber)}}>{participant.user_name ? participant.user_name[0] : participantNumber}</Icon>
+        <InfoHolder>
+          <Name active={isActive}>{participant.user_name ? participant.user_name : `Participant ${participantNumber}`}</Name>
+          {participant.duration && <Time active={isActive}>Time in Call: {formatTime(participant.duration)}</Time>}
+        </InfoHolder>
+      </ParticipantCard>}
+    </div>
   )
 };
 

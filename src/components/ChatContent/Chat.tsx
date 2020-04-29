@@ -45,7 +45,7 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, se
             })
           })
         }
-        console.log(callFrame.meetingState());
+        console.log(evt);
       })
       .on('joined-meeting', (evt) => {
         setView('CHAT');
@@ -58,7 +58,7 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, se
           time_start: Date.now()
         });
         setIsLoading(false);
-        console.log('joined');
+        console.log(evt);
       })
       .on('participant-joined', (evt) => {
         const data = callFrame.participants();
@@ -72,12 +72,14 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, se
               return participantsData;
             }
           });
+          console.log(evt);
       })
       .on('left-meeting', (evt) => {
         setHasLeftMeeting(true);
         setActiveSpeaker(null);
         callFrame.destroy();
         setView('SUMMARY');
+        console.log(evt);
       })
       .on('participant-left', (evt) => {
         setParticipants((prevState) => {
@@ -90,7 +92,7 @@ const Chat = ({setView, setParticipants, setHasLeftMeeting, setActiveSpeaker, se
             }
           })
         });
-        console.log(evt.participant.user_id);
+        console.log(evt);
       })
       .on('active-speaker-change', (evt) => {
         setActiveSpeaker({

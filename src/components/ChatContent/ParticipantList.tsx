@@ -20,14 +20,11 @@ type ParticipantListProps = {
 }
 
 const ParticipantList = ({participants, setParticipants, view, hasLeftMeeting, activeSpeaker } : ParticipantListProps) => {
-  const sortActiveParticipants = (participants: any): any => {
-    return participants.filter((part) => part.is_in_call);
-  }
 
   return(
   <ListWrapper>
-    {participants && sortActiveParticipants(participants).map((part, index) => {
-      return ( <Participant key={part.user_id} index={index} participant={part} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting} activeSpeaker={activeSpeaker}/>);
+    {participants && participants.map((part, index) => {
+      return ( <Participant key={part.user_id} isInCall={part.is_in_call} index={index} participant={part} setParticipants={setParticipants} view={view} hasLeftMeeting={hasLeftMeeting} activeSpeaker={activeSpeaker}/>);
     })}
   </ListWrapper>
   )

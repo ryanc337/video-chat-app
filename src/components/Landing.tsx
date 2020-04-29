@@ -26,6 +26,7 @@ const SubTitle = styled.h3`
   margin: 10px 0;
   text-align: center;
   font-weight: 400;
+
 `
 
 const Button = styled.button`
@@ -35,9 +36,14 @@ const Button = styled.button`
   height: 40px;
   border-radius: 15px;
   border: 1px solid black;
-  background-color: #d6d6d6;
+  background-color: #4287f5;
   font-size: 16px;
   font-weight: 400;
+  color: #f2f7fa;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 type LandingProps = {

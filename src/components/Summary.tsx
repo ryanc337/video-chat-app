@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import ChatData from './ChatData';
 import formatTime from '../lib/formatTime';
 
 const Wrapper = styled.div`
@@ -48,18 +49,19 @@ type SummaryProps = {
 }
 
 const Summary = ({participants, resetState} : SummaryProps) => {
-  useEffect(() => {
-    console.log(participants);
-  }, [participants]);
+  const [ showChatData, setShowChatData ] = useState(false);
 
   return(
     <Wrapper>
-      <Header>Your call has ended</Header>
-      {`You were in the call for ${formatTime(participants.filter(part => part.local)[0].duration)}`}
-      <ButtonHolder>
-        <Button onClick={resetState}>Return Home</Button>
-        <Button>View Call Data</Button>
-      </ButtonHolder>
+      {!showChatData && <div>
+        <Header>Your call has ended</Header>
+        {`You were in the call for ${formatTime(participants.filter(part => part.local)[0].duration)}`}
+        <ButtonHolder>
+          <Button onClick={resetState}>Return Home</Button>
+          <Button onClick={() => setShowChatData(true)}>View Call Data</Button>
+        </ButtonHolder>
+      </div>}
+      {showChatData && <ChatData participants={participants}/>}
 
     </Wrapper>
   )
