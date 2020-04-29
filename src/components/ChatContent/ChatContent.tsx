@@ -21,7 +21,7 @@ type ChatContentProps = {
   setParticipants: any,
   participants: any,
   isLoading: boolean;
-  setIsLoading: boolean;
+  setIsLoading: any;
 };
 
 const ChatContent = ({ participants, setParticipants, setView, isLoading, setIsLoading }: ChatContentProps) => {
