@@ -14,13 +14,10 @@ const ListWrapper = styled.div`
 type ParticipantListProps = {
   participants: any,
   setParticipants: any,
-  view: string,
-  activeSpeaker: any,
-  hasLeftMeeting: boolean;
   startTimer: boolean;
 }
 
-const ParticipantList = ({participants, setParticipants, view, hasLeftMeeting, activeSpeaker, startTimer} : ParticipantListProps) => {
+const ParticipantList = ({participants, setParticipants, startTimer} : ParticipantListProps) => {
   useEffect(() => {
     if (startTimer) {
       let timer = setInterval(() => {

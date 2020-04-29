@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Header, Button, SubTitle } from './Common/Styles';
 
 const LandingWrapper = styled.div`
   display: flex;
@@ -14,36 +15,6 @@ const LandingWrapper = styled.div`
   -webkit-box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
   -moz-box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
   box-shadow: 10px 13px 17px -4px rgba(0,0,0,0.75);
-`;
-
-const Header = styled.h1`
-  text-align: center;
-  font-weight: 500;
-  margin: 10px 0;
-`
-
-const SubTitle = styled.h3`
-  margin: 10px 0;
-  text-align: center;
-  font-weight: 400;
-
-`
-
-const Button = styled.button`
-  width: 100px;
-  margin: 10px 0;
-  text-align: center;
-  height: 40px;
-  border-radius: 15px;
-  border: 1px solid black;
-  background-color: #4287f5;
-  font-size: 16px;
-  font-weight: 400;
-  color: #f2f7fa;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 type LandingProps = {
