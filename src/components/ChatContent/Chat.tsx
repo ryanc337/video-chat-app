@@ -28,7 +28,7 @@ const Chat = ({setView, setParticipants, setIsLoading, setStartTimer} : ChatProp
           borderBottomRightRadius: '15px',
         }
       });
-      callFrame.join({ url: process.env.REACT_APP_DAILY_URL });
+      callFrame.join({ url: 'https://go-ryan.daily.co/deploy' });
       callFrame.on('participant-updated', (evt) => {
         if (callFrame.meetingState() !== 'joining-meeting') {
           setParticipants(prevState => {
